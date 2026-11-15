@@ -1,0 +1,113 @@
+.reviewer-card .trace-stack + .trace-stack {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed #ccddd3;
+}
+
+.knowledge-list small {
+  display: block;
+  margin: 6px 0 7px;
+  color: #7a8981;
+  font-size: 10px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.reviewer-card .empty-copy {
+  margin-top: 10px;
+}
+
+/* Reviewer panel. Deliberately looks like a debug overlay rather than a
+   youth-facing card: dashed border, muted surface, tabular numerals. Only
+   rendered behind the 评审视图 toggle in the top bar. */
+
+.review-toggle-active {
+  background: var(--green-soft);
+  border-color: var(--green);
+  color: var(--green-dark);
+}
+
+.reviewer-card {
+  background: var(--surface-soft);
+  border-style: dashed;
+  border-color: #c6d8cd;
+}
+
+.trace-grid {
+  display: grid;
+  gap: 5px;
+  margin: 4px 0 0;
+}
+
+.trace-grid > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.trace-grid dt {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.trace-grid dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.trace-danger {
+  color: var(--danger);
+}
+
+.trace-amber {
+  color: var(--amber);
+}
+
+.score-list {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.score-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px 30px;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.score-list li > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score-bar {
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--line);
+}
+
+.score-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--green);
+}
+
+.score-list b {
+  color: var(--ink);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}

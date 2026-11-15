@@ -1,0 +1,589 @@
+{
+  "version": 1,
+  "note": "Noname Re:Play 策略经验库。只提供策略先验，不直接决定动作。匹配是透明规则打分，不是向量相似度。",
+  "cases": [
+    {
+      "id": "engage_interest_01",
+      "stage": "ENGAGE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": false,
+      "sustain_talk": false,
+      "preferred_strategies": [
+        "SIMPLE_REFLECTION",
+        "OPEN_QUESTION"
+      ],
+      "avoid_strategies": [],
+      "reason": "用户只表达了对游戏的兴趣，先反映具体体验，不急于推进改变。",
+      "weight": 1.0
+    },
+    {
+      "id": "engage_denial_01",
+      "stage": "ENGAGE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "autonomy"
+      ],
+      "motivation_range": [
+        0,
+        3
+      ],
+      "change_talk": false,
+      "sustain_talk": true,
+      "preferred_strategies": [
+        "AUTONOMY_SUPPORT",
+        "SIMPLE_REFLECTION"
+      ],
+      "avoid_strategies": [
+        "ACTION_PLANNING",
+        "ELICIT_CHANGE_TALK"
+      ],
+      "reason": "用户明确表示不需要改变，推进计划或诱导改变理由只会增加对抗。",
+      "weight": 1.0
+    },
+    {
+      "id": "engage_topic_unclear_01",
+      "stage": "ENGAGE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "OPEN_QUESTION",
+        "SIMPLE_REFLECTION"
+      ],
+      "avoid_strategies": [],
+      "reason": "尚未形成明确关注点，先收集具体信息。",
+      "weight": 1.0
+    },
+    {
+      "id": "focus_topic_clear_01",
+      "stage": "FOCUS",
+      "focus_topics": [
+        "sleep",
+        "stopping",
+        "school",
+        "family",
+        "emotion",
+        "social"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": false,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "SUMMARY",
+        "OPEN_QUESTION"
+      ],
+      "avoid_strategies": [],
+      "reason": "关注点已经清楚，先总结再与用户共同确认优先方向。",
+      "weight": 1.0
+    },
+    {
+      "id": "focus_ambiguous_01",
+      "stage": "FOCUS",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        5
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "SUMMARY",
+        "COMPLEX_REFLECTION"
+      ],
+      "avoid_strategies": [
+        "ACTION_PLANNING"
+      ],
+      "reason": "关注点仍在摇摆，先做复杂反映而不是收缩到行动。",
+      "weight": 1.0
+    },
+    {
+      "id": "evoke_ambivalence_01",
+      "stage": "EVOKE",
+      "focus_topics": [
+        "sleep",
+        "stopping",
+        "*"
+      ],
+      "needs": [
+        "belonging",
+        "*"
+      ],
+      "motivation_range": [
+        3,
+        7
+      ],
+      "change_talk": true,
+      "sustain_talk": true,
+      "preferred_strategies": [
+        "DOUBLE_SIDED_REFLECTION",
+        "ELICIT_CHANGE_TALK"
+      ],
+      "avoid_strategies": [
+        "ACTION_PLANNING"
+      ],
+      "reason": "用户同时存在改变理由和维持现状理由，不宜过早推进计划。",
+      "weight": 1.0
+    },
+    {
+      "id": "evoke_change_talk_only_01",
+      "stage": "EVOKE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": true,
+      "sustain_talk": false,
+      "preferred_strategies": [
+        "ELICIT_CHANGE_TALK",
+        "AFFIRMATION",
+        "COMPLEX_REFLECTION"
+      ],
+      "avoid_strategies": [],
+      "reason": "用户已经在说自己的改变理由，应放大并肯定，而不是替他总结。",
+      "weight": 1.0
+    },
+    {
+      "id": "evoke_sustain_talk_only_01",
+      "stage": "EVOKE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        4
+      ],
+      "change_talk": false,
+      "sustain_talk": true,
+      "preferred_strategies": [
+        "AUTONOMY_SUPPORT",
+        "COMPLEX_REFLECTION"
+      ],
+      "avoid_strategies": [
+        "ACTION_PLANNING",
+        "ASK_PERMISSION"
+      ],
+      "reason": "用户当前只有维持现状的理由，需要先支持自主性而不是推动改变。",
+      "weight": 1.0
+    },
+    {
+      "id": "evoke_low_motivation_01",
+      "stage": "EVOKE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        3
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "AUTONOMY_SUPPORT",
+        "READINESS_RULER"
+      ],
+      "avoid_strategies": [
+        "ACTION_PLANNING"
+      ],
+      "reason": "改变意愿很低时，强行规划会破坏关系和自主感。",
+      "weight": 1.0
+    },
+    {
+      "id": "evoke_readiness_check_01",
+      "stage": "EVOKE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        4,
+        7
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "READINESS_RULER",
+        "ELICIT_CHANGE_TALK"
+      ],
+      "avoid_strategies": [],
+      "reason": "意愿处于中间区间，适合先量化意愿再决定是否收缩到计划。",
+      "weight": 1.0
+    },
+    {
+      "id": "evoke_belonging_need_01",
+      "stage": "EVOKE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "belonging",
+        "connection"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "DOUBLE_SIDED_REFLECTION",
+        "COMPLEX_REFLECTION",
+        "AFFIRMATION"
+      ],
+      "avoid_strategies": [],
+      "reason": "队友和朋友是需要而不是问题主题，双面反映可以同时承认真实价值与影响。",
+      "weight": 1.0
+    },
+    {
+      "id": "evoke_autonomy_need_01",
+      "stage": "EVOKE",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "autonomy"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "AUTONOMY_SUPPORT",
+        "COMPLEX_REFLECTION"
+      ],
+      "avoid_strategies": [
+        "ACTION_PLANNING"
+      ],
+      "reason": "自主需要高时，先明确决定权在用户手里。",
+      "weight": 1.0
+    },
+    {
+      "id": "plan_ready_01",
+      "stage": "PLAN",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        6,
+        10
+      ],
+      "change_talk": true,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "ASK_PERMISSION",
+        "ACTION_PLANNING"
+      ],
+      "avoid_strategies": [],
+      "reason": "用户已有明确行动意图，先征得同意再形成微行动。",
+      "weight": 1.0
+    },
+    {
+      "id": "plan_confidence_low_01",
+      "stage": "PLAN",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        3,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "CONFIDENCE_RULER",
+        "ASK_PERMISSION"
+      ],
+      "avoid_strategies": [],
+      "reason": "计划阶段需要区分「有多重要」和「有多把握」，把握不足时先降低目标难度。",
+      "weight": 1.0
+    },
+    {
+      "id": "plan_sleep_01",
+      "stage": "PLAN",
+      "focus_topics": [
+        "sleep"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "ACTION_PLANNING",
+        "ASK_PERMISSION"
+      ],
+      "avoid_strategies": [],
+      "reason": "睡眠主题的行动实验通常足够小，可以直接形成三天微实验。",
+      "weight": 1.0
+    },
+    {
+      "id": "plan_stopping_01",
+      "stage": "PLAN",
+      "focus_topics": [
+        "stopping"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "ACTION_PLANNING",
+        "ASK_PERMISSION"
+      ],
+      "avoid_strategies": [],
+      "reason": "停止困难适合用「最后一局」这类可观察的结束点做实验。",
+      "weight": 1.0
+    },
+    {
+      "id": "plan_school_01",
+      "stage": "PLAN",
+      "focus_topics": [
+        "school"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "ACTION_PLANNING",
+        "ASK_PERMISSION"
+      ],
+      "avoid_strategies": [],
+      "reason": "学习启动类目标要足够小，先做五分钟再决定是否继续。",
+      "weight": 1.0
+    },
+    {
+      "id": "plan_family_01",
+      "stage": "PLAN",
+      "focus_topics": [
+        "family"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "ASK_PERMISSION",
+        "ACTION_PLANNING"
+      ],
+      "avoid_strategies": [],
+      "reason": "家庭冲突主题的行动由用户自己提出，避免替用户安排沟通。",
+      "weight": 1.0
+    },
+    {
+      "id": "plan_emotion_01",
+      "stage": "PLAN",
+      "focus_topics": [
+        "emotion"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "ACTION_PLANNING",
+        "AFFIRMATION"
+      ],
+      "avoid_strategies": [],
+      "reason": "情绪主题优先用观察记录类实验，而不是直接要求减少游戏。",
+      "weight": 1.0
+    },
+    {
+      "id": "plan_social_01",
+      "stage": "PLAN",
+      "focus_topics": [
+        "social"
+      ],
+      "needs": [
+        "belonging"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "ACTION_PLANNING",
+        "ASK_PERMISSION",
+        "AUTONOMY_SUPPORT"
+      ],
+      "avoid_strategies": [],
+      "reason": "社交主题的计划要同时保留下线边界和队友关系。",
+      "weight": 1.0
+    },
+    {
+      "id": "review_success_01",
+      "stage": "REVIEW",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": true,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "AFFIRMATION",
+        "REVIEW_AND_ADJUST"
+      ],
+      "avoid_strategies": [],
+      "reason": "用户观察到积极变化时，先肯定再讨论是否调整难度。",
+      "weight": 1.0
+    },
+    {
+      "id": "review_failed_01",
+      "stage": "REVIEW",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        5
+      ],
+      "change_talk": null,
+      "sustain_talk": true,
+      "preferred_strategies": [
+        "AFFIRMATION",
+        "COMPLEX_REFLECTION",
+        "REVIEW_AND_ADJUST"
+      ],
+      "avoid_strategies": [
+        "ACTION_PLANNING"
+      ],
+      "reason": "计划未完成时不追加新任务，先复盘条件和难度。",
+      "weight": 1.0
+    },
+    {
+      "id": "review_adjust_01",
+      "stage": "REVIEW",
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "REVIEW_AND_ADJUST",
+        "COMPLEX_REFLECTION"
+      ],
+      "avoid_strategies": [],
+      "reason": "复盘的重点是有效条件和目标难度，而不是成功或失败本身。",
+      "weight": 1.0
+    },
+    {
+      "id": "repeated_questioning_01",
+      "stage": null,
+      "focus_topics": [
+        "*"
+      ],
+      "needs": [
+        "*"
+      ],
+      "motivation_range": [
+        0,
+        10
+      ],
+      "change_talk": null,
+      "sustain_talk": null,
+      "preferred_strategies": [
+        "SIMPLE_REFLECTION",
+        "SUMMARY"
+      ],
+      "avoid_strategies": [
+        "OPEN_QUESTION"
+      ],
+      "reason": "连续多轮以问句收尾会加重负担，本轮应改用陈述式反映或总结。",
+      "weight": 1.0
+    }
+  ]
+}
