@@ -10,7 +10,6 @@ from typing import Any
 from .paths import knowledge_file
 from .schemas import KnowledgeHit, RiskLevel
 
-
 HAN_RUN_PATTERN = re.compile(r"[\u4e00-\u9fff]+")
 WORD_PATTERN = re.compile(r"[A-Za-z0-9_]+")
 STOP_CHARACTERS = set("的了是在和与也就都而及或很把被让给有没我你他她它这那吗呢吧啊呀")

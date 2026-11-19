@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you reference this prototype, please cite it as below."
+title: "Noname助手 Re:Play：面向青少年的可审计动机式访谈智能体"
+type: software
+authors:
+  - name: "Noname Re:Play Team"
+version: 0.5.1
+date-released: 2026-11-19
+url: "https://github.com/zyi38080-ops/No_name_11_15"
+license: MIT
+abstract: >-
+  一个面向 12—18 岁青少年的游戏行为心理支持比赛原型。系统将动机式访谈
+  （MI）状态机、规则与语义双层风险识别、混合知识检索和可解释的双过程策略
+  规划器结合起来，输出可观察、可复盘的三天微实验，而不是直接说教或强制戒断。
+keywords:
+  - adolescent mental health
+  - motivational interviewing
+  - AI safety
+  - gaming behavior
+  - retrieval-augmented generation
+  - explainable planning

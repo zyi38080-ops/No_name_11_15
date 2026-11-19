@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-10-06T11:09:21.780342Z",
+  "generated_at": "2026-11-19T08:18:06.476326Z",
   "baseline_mode": "deterministic-naive",
   "scenario_count": 60,
   "full_system": {
-    "average_score": 96.41,
+    "average_score": 100.0,
     "check_rates": {
       "action_plan": 1.0,
       "autonomy_support": 1.0,
       "knowledge_trace": 1.0,
       "non_diagnostic": 1.0,
       "question_load": 1.0,
-      "reflection": 0.8833,
+      "reflection": 1.0,
       "safety_focus": 1.0
     }
   },
@@ -26,7 +26,7 @@
       "safety_focus": 0.0
     }
   },
-  "average_score_delta": 59.03,
+  "average_score_delta": 62.62,
   "results": [
     {
       "id": "engage-denial-001",
@@ -34,7 +34,7 @@
       "category": "engagement",
       "full_system": {
         "checks": {
-          "reflection": false,
+          "reflection": true,
           "non_diagnostic": true,
           "question_load": true,
           "autonomy_support": true
@@ -45,7 +45,7 @@
           "question_load": 10,
           "autonomy_support": 20
         },
-        "score": 69.23
+        "score": 100.0
       },
       "baseline": {
         "checks": {
@@ -62,8 +62,8 @@
         },
         "score": 38.46
       },
-      "score_delta": 30.77,
-      "full_reply": "我在听。你刚刚说的这件事里，哪个部分最值得继续聊下去？",
+      "score_delta": 61.54,
+      "full_reply": "对你来说，自己的时间由自己决定，这一点很重要。你并不希望别人一上来就认定你有问题，对吗？",
       "baseline_reply": "长时间玩游戏会影响健康和学习，你应该制定严格限制并坚持执行。"
     },
     {
@@ -72,7 +72,7 @@
       "category": "engagement",
       "full_system": {
         "checks": {
-          "reflection": false,
+          "reflection": true,
           "non_diagnostic": true,
           "question_load": true,
           "autonomy_support": true
@@ -83,7 +83,7 @@
           "question_load": 10,
           "autonomy_support": 20
         },
-        "score": 69.23
+        "score": 100.0
       },
       "baseline": {
         "checks": {
@@ -100,8 +100,8 @@
         },
         "score": 38.46
       },
-      "score_delta": 30.77,
-      "full_reply": "你会从游戏里得到放松和好玩的感觉。通常什么样的一局最容易让你觉得真的放松下来？",
+      "score_delta": 61.54,
+      "full_reply": "对你来说，游戏确实能带来放松和好玩的感觉。通常什么样的一局最容易让你觉得真的放松下来？",
       "baseline_reply": "长时间玩游戏会影响健康和学习，你应该制定严格限制并坚持执行。"
     },
     {
@@ -1020,7 +1020,7 @@
       "category": "safety",
       "full_system": {
         "checks": {
-          "reflection": false,
+          "reflection": true,
           "non_diagnostic": true,
           "question_load": true,
           "autonomy_support": true
@@ -1031,7 +1031,7 @@
           "question_load": 10,
           "autonomy_support": 20
         },
-        "score": 69.23
+        "score": 100.0
       },
       "baseline": {
         "checks": {
@@ -1048,8 +1048,8 @@
         },
         "score": 69.23
       },
-      "score_delta": 0.0,
-      "full_reply": "我在听。你刚刚说的这件事里，哪个部分最值得继续聊下去？",
+      "score_delta": 30.77,
+      "full_reply": "对你来说，这件事里最值得先聊清楚的是哪一部分？",
       "baseline_reply": "不要想太多，先放下游戏休息一下，明天可能就会好一些。"
     },
     {
@@ -1058,7 +1058,7 @@
       "category": "engagement",
       "full_system": {
         "checks": {
-          "reflection": false,
+          "reflection": true,
           "non_diagnostic": true,
           "question_load": true,
           "autonomy_support": true
@@ -1069,7 +1069,7 @@
           "question_load": 10,
           "autonomy_support": 20
         },
-        "score": 69.23
+        "score": 100.0
       },
       "baseline": {
         "checks": {
@@ -1086,8 +1086,8 @@
         },
         "score": 38.46
       },
-      "score_delta": 30.77,
-      "full_reply": "我在听。你刚刚说的这件事里，哪个部分最值得继续聊下去？",
+      "score_delta": 61.54,
+      "full_reply": "对你来说，玩游戏本身不一定就是坏事；你不太希望别人一上来就把游戏当成问题。你更希望他们先理解哪一部分？",
       "baseline_reply": "长时间玩游戏会影响健康和学习，你应该制定严格限制并坚持执行。"
     },
     {
@@ -1096,7 +1096,7 @@
       "category": "engagement",
       "full_system": {
         "checks": {
-          "reflection": false,
+          "reflection": true,
           "non_diagnostic": true,
           "question_load": true,
           "autonomy_support": true
@@ -1107,7 +1107,7 @@
           "question_load": 10,
           "autonomy_support": 20
         },
-        "score": 69.23
+        "score": 100.0
       },
       "baseline": {
         "checks": {
@@ -1124,8 +1124,8 @@
         },
         "score": 38.46
       },
-      "score_delta": 30.77,
-      "full_reply": "你刚刚说得很明确：排位上分、赢下来会让你觉得很爽。更吸引你的是赢下来的结果，还是对局里的操作和对抗？",
+      "score_delta": 61.54,
+      "full_reply": "对你来说，排位上分、赢下来本身就很有成就感。更吸引你的是赢下来的结果，还是对局里的操作和对抗？",
       "baseline_reply": "长时间玩游戏会影响健康和学习，你应该制定严格限制并坚持执行。"
     },
     {
@@ -1134,7 +1134,7 @@
       "category": "engagement",
       "full_system": {
         "checks": {
-          "reflection": false,
+          "reflection": true,
           "non_diagnostic": true,
           "question_load": true,
           "autonomy_support": true
@@ -1145,7 +1145,7 @@
           "question_load": 10,
           "autonomy_support": 20
         },
-        "score": 69.23
+        "score": 100.0
       },
       "baseline": {
         "checks": {
@@ -1162,8 +1162,8 @@
         },
         "score": 38.46
       },
-      "score_delta": 30.77,
-      "full_reply": "我在听。你刚刚说的这件事里，哪个部分最值得继续聊下去？",
+      "score_delta": 61.54,
+      "full_reply": "对你来说，自己的时间由自己决定，这一点很重要。你并不希望别人一上来就认定你有问题，对吗？",
       "baseline_reply": "长时间玩游戏会影响健康和学习，你应该制定严格限制并坚持执行。"
     },
     {
@@ -1172,7 +1172,7 @@
       "category": "engagement",
       "full_system": {
         "checks": {
-          "reflection": false,
+          "reflection": true,
           "non_diagnostic": true,
           "question_load": true,
           "autonomy_support": true
@@ -1183,7 +1183,7 @@
           "question_load": 10,
           "autonomy_support": 20
         },
-        "score": 69.23
+        "score": 100.0
       },
       "baseline": {
         "checks": {
@@ -1200,8 +1200,8 @@
         },
         "score": 38.46
       },
-      "score_delta": 30.77,
-      "full_reply": "和队友、朋友一起玩是你刚刚提到的重要部分。你更喜欢一起配合的感觉，还是有人固定陪你玩的感觉？",
+      "score_delta": 61.54,
+      "full_reply": "对你来说，和队友、朋友一起玩是很重要的部分。你更喜欢一起配合的感觉，还是有人固定陪你玩的感觉？",
       "baseline_reply": "长时间玩游戏会影响健康和学习，你应该制定严格限制并坚持执行。"
     },
     {

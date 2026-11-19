@@ -17,6 +17,8 @@ import { AGENT_NAME } from "./branding";
 import type {
   ActionPlan,
   ChatResponse,
+  DemoScenario,
+  DemoScenarioList,
   EvaluationSummary,
   Message,
   ReviewerTrace,
@@ -62,6 +64,37 @@ const plannerModeLabels: Record<string, string> = {
   fallback: "回退启发式",
 };
 
+const stageLabels: Record<string, string> = {
+  ENGAGE: "建立关系",
+  FOCUS: "聚焦问题",
+  EVOKE: "唤起动机",
+  PLAN: "形成计划",
+  REVIEW: "复盘调整",
+  SAFETY: "安全优先",
+};
+
+const riskLabels: Record<string, string> = {
+  LOW: "低",
+  CONCERN: "关注",
+  HIGH: "高风险",
+};
+
+const strategyLabels: Record<string, string> = {
+  OPEN_QUESTION: "开放式提问",
+  SIMPLE_REFLECTION: "简单反映",
+  COMPLEX_REFLECTION: "复杂反映",
+  AFFIRMATION: "肯定",
+  SUMMARY: "总结",
+  DOUBLE_SIDED_REFLECTION: "双面反映",
+  AUTONOMY_SUPPORT: "自主支持",
+  ELICIT_CHANGE_TALK: "引出改变语言",
+  READINESS_RULER: "意愿标尺",
+  CONFIDENCE_RULER: "信心标尺",
+  ASK_PERMISSION: "征得许可",
+  ACTION_PLANNING: "行动计划",
+  REVIEW_AND_ADJUST: "复盘调整",
+};
+
 function ReviewPanel({
   trace,
   evidence,
@@ -92,7 +125,7 @@ function ReviewPanel({
           <dl className="trace-grid">
             <div>
               <dt>会话阶段</dt>
-              <dd>{trace.stage}</dd>
+              <dd>{stageLabels[trace.stage] ?? trace.stage}</dd>
             </div>
             <div>
               <dt>风险等级</dt>
@@ -105,7 +138,7 @@ function ReviewPanel({
                       : undefined
                 }
               >
-                {trace.risk.level}
+                {riskLabels[trace.risk.level] ?? trace.risk.level}
               </dd>
             </div>
             <div>
@@ -118,7 +151,11 @@ function ReviewPanel({
             </div>
             <div>
               <dt>选中策略</dt>
-              <dd>{trace.selected_strategy ?? "—"}</dd>
+              <dd>
+                {trace.selected_strategy
+                  ? (strategyLabels[trace.selected_strategy] ?? trace.selected_strategy)
+                  : "—"}
+              </dd>
             </div>
             <div>
               <dt>知识检索</dt>
@@ -132,7 +169,7 @@ function ReviewPanel({
               <ul className="score-list">
                 {candidates.map(([name, score]) => (
                   <li key={name}>
-                    <span>{name}</span>
+                    <span>{strategyLabels[name] ?? name}</span>
                     <span className="score-bar">
                       <i style={{ width: `${Math.round(score * 100)}%` }} />
                     </span>
@@ -206,6 +243,12 @@ function App() {
   const [trace, setTrace] = useState<ReviewerTrace | null>(null);
   const [showReview, setShowReview] = useState(false);
   const [evidence, setEvidence] = useState<EvaluationSummary | null>(null);
+  const [ageGroup, setAgeGroup] = useState("15-16");
+  const [showDemo, setShowDemo] = useState(false);
+  const [demoScenarios, setDemoScenarios] = useState<DemoScenario[]>([]);
+  const [demoNotice, setDemoNotice] = useState("");
+  const [selectedDemoId, setSelectedDemoId] = useState("");
+  const [loadedDemo, setLoadedDemo] = useState<DemoScenario | null>(null);
   const [loading, setLoading] = useState(false);
   const [streamingStarted, setStreamingStarted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -223,6 +266,19 @@ function App() {
       .then((data: EvaluationSummary | null) => setEvidence(data))
       .catch(() => undefined);
   }, [showReview, evidence]);
+
+  // Demo scripts are fetched lazily, once, the first time the drawer is opened.
+  useEffect(() => {
+    if (!showDemo || demoScenarios.length > 0) return;
+    void fetch("/api/demo/scenarios")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: DemoScenarioList | null) => {
+        if (!data) return;
+        setDemoScenarios(data.scenarios);
+        setDemoNotice(data.notice);
+      })
+      .catch(() => undefined);
+  }, [showDemo, demoScenarios.length]);
 
   const balanceItems = useMemo(() => {
     const items: string[] = [];
@@ -286,6 +342,7 @@ function App() {
         body: JSON.stringify({
           session_id: sessionId,
           message: text,
+          age_group: ageGroup,
           reviewer_mode: true,
         }),
       });
@@ -399,6 +456,15 @@ function App() {
     void sendMessage(input);
   }
 
+  function loadSelectedDemo() {
+    const scenario = demoScenarios.find((item) => item.id === selectedDemoId);
+    if (!scenario) return;
+    setLoadedDemo(scenario);
+    setShowReview(true);
+    setInput(scenario.messages[0] ?? "");
+    setError(null);
+  }
+
   async function resetSession() {
     try {
       await fetch(`/api/sessions/${sessionId}`, { method: "DELETE" });
@@ -430,6 +496,23 @@ function App() {
         </div>
 
         <div className="top-actions">
+          <label className="age-select">
+            <span>年龄段</span>
+            <select value={ageGroup} onChange={(event) => setAgeGroup(event.target.value)}>
+              <option value="12-14">12—14</option>
+              <option value="15-16">15—16</option>
+              <option value="17-18">17—18</option>
+            </select>
+          </label>
+          <button
+            className={`icon-button ${showDemo ? "review-toggle-active" : ""}`}
+            type="button"
+            onClick={() => setShowDemo((value) => !value)}
+            aria-pressed={showDemo}
+          >
+            <Sparkles size={18} />
+            <span>演示脚本</span>
+          </button>
           <button
             className={`icon-button ${showReview ? "review-toggle-active" : ""}`}
             type="button"
@@ -475,6 +558,65 @@ function App() {
               不需要真实姓名或学校
             </div>
           </div>
+
+          {showDemo && (
+            <div className="demo-toolbar">
+              <div className="demo-toolbar-copy">
+                <Sparkles size={16} />
+                <div>
+                  <strong>比赛演示脚本</strong>
+                  <span>{demoNotice || "虚构数据，载入后不会自动发送。"}</span>
+                </div>
+              </div>
+              <select
+                value={selectedDemoId}
+                onChange={(event) => setSelectedDemoId(event.target.value)}
+                aria-label="选择演示脚本"
+              >
+                <option value="">选择一组虚构脚本</option>
+                {demoScenarios.map((scenario) => (
+                  <option key={scenario.id} value={scenario.id}>
+                    {scenario.title}
+                    {scenario.high_risk ? "（高风险）" : ""}
+                  </option>
+                ))}
+              </select>
+              <button type="button" onClick={loadSelectedDemo} disabled={!selectedDemoId}>
+                载入脚本
+              </button>
+            </div>
+          )}
+
+          {showDemo && loadedDemo && (
+            <div className={`demo-script ${loadedDemo.high_risk ? "high-risk" : ""}`}>
+              <div>
+                <strong>
+                  {loadedDemo.title}
+                  {loadedDemo.high_risk ? " · 高风险" : ""}
+                </strong>
+                <p>{loadedDemo.description}</p>
+              </div>
+              <div className="demo-message-list">
+                {loadedDemo.messages.map((message, index) => (
+                  <button
+                    key={`${loadedDemo.id}-${index}`}
+                    type="button"
+                    onClick={() => {
+                      setInput(message);
+                      setError(null);
+                    }}
+                  >
+                    {index + 1}. {message}
+                  </button>
+                ))}
+              </div>
+              <div className="demo-highlights">
+                {loadedDemo.reviewer_highlights.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="messages" aria-live="polite">
             {messages.map((message) => (

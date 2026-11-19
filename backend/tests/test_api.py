@@ -1,6 +1,6 @@
 from httpx import ASGITransport, AsyncClient
 
-from noname.main import app
+from noname.main import APP_VERSION, app
 
 
 async def test_health_endpoint_reports_runtime_mode() -> None:
@@ -67,7 +67,7 @@ async def test_diagnostics_never_exposes_api_key() -> None:
 
     assert response.status_code == 200
     payload = response.json()
-    assert payload["version"] == "0.4.0"
+    assert payload["version"] == APP_VERSION
     assert payload["storage"] in {"memory", "sqlite"}
     assert payload["session_retention_hours"] >= 1
     assert "api_key" not in response.text.lower()

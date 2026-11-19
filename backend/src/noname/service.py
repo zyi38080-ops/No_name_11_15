@@ -723,6 +723,17 @@ class ConversationService:
                 "安排时间",
                 "做个计划",
                 "定个计划",
+                "提前15分钟",
+                "提前十五分钟",
+                "提前10分钟",
+                "提前十分钟",
+                "提前30分钟",
+                "提前三十分钟",
+                "提前半小时",
+                "提前一刻钟",
+                "早点睡",
+                "提早睡",
+                "少玩半小时",
             )
         )
         if not plan_intent:
@@ -777,6 +788,39 @@ class ConversationService:
                     else "希望更容易按自己的计划停下来"
                     if focus == "stopping"
                     else "看看这个小调整是否更适合自己的生活节奏"
+                ),
+                confidence=analysis.motivation.confidence or 6,
+                obstacle="到了原本常玩的时间还想继续或再开一局",
+                coping_plan="提前确定最后一局；如果一次没做到，只记录原因，再决定下一次怎么调整",
+            )
+
+        if any(token in message for token in ("提前半小时", "提前30分钟", "提前三十分钟")):
+            return ActionPlan(
+                title="提前半小时小实验",
+                behavior="比平常提前半小时结束游戏，并观察之后的状态",
+                duration="先尝试一次，再根据结果调整",
+                reason=(
+                    "希望第二天更有精神"
+                    if focus == "sleep"
+                    else "希望更容易按自己的计划停下来"
+                ),
+                confidence=analysis.motivation.confidence or 6,
+                obstacle="到了原本常玩的时间还想继续或再开一局",
+                coping_plan="提前确定最后一局；如果一次没做到，只记录原因，再决定下一次怎么调整",
+            )
+
+        if any(
+            token in message
+            for token in ("提前15分钟", "提前十五分钟", "提前10分钟", "提前十分钟", "提前一刻钟")
+        ):
+            return ActionPlan(
+                title="提前一小步小实验",
+                behavior="比平常提前十几分钟结束游戏，并观察之后的状态",
+                duration="先尝试一次，再根据结果调整",
+                reason=(
+                    "希望第二天更有精神"
+                    if focus == "sleep"
+                    else "希望更容易按自己的计划停下来"
                 ),
                 confidence=analysis.motivation.confidence or 6,
                 obstacle="到了原本常玩的时间还想继续或再开一局",

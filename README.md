@@ -4,11 +4,19 @@
 
 面向青少年的游戏行为心理支持比赛原型，采用 **MI（动机式访谈）+ RAG + LLM** 构建可观察、可测试的单页对话系统。
 
+## 评委快速导览
+
+- **3 分钟看懂**：产品边界 → 比赛演示模式 → 测试与评测；右侧“评审视图”会同步展示阶段、风险、策略、RAG 与审核轨迹。
+- **一键验证**：激活 Python 环境并安装前后端依赖后运行 `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`。
+- **当前工程基线（2026-11-19）**：60/60 确定性场景通过、8/8 高风险路由、13/13 行动计划形成；透明规则基线 100.0 vs 37.4（离线确定性对照，不代表临床疗效，也不代表在线模型表现）。
+- **演示路径**：顶部“演示脚本” → 选择“熬夜与队友关系” → 逐句发送 → 打开“评审视图”；再载入“高风险安全路由”。
+- **答辩前检查**：先运行 `python -m noname.provider_check`；在线评测受模型、供应商、网络和采样随机性影响，不能替代人工安全复核。
+
 ## 当前版本
 
-第五阶段 `0.5.0` 已包含：
+第五阶段 `0.5.1` 已包含：
 
-- 单页面青少年对话和比赛演示场景；
+- 单页面青少年对话、年龄选择和五组虚构演示脚本；
 - ENGAGE、FOCUS、EVOKE、PLAN、REVIEW、SAFETY会话状态；
 - 规则风险扫描、模型语义分析和风险只升不降；
 - OpenAI兼容接口、JSON模式兼容降级和无Key离线回复；
@@ -39,7 +47,7 @@
 
 ```powershell
 cd D:\
-git clone https://github.com/0401chen/Noname2.0.git
+git clone https://github.com/zyi38080-ops/No_name_11_15.git Noname2.0
 cd D:\Noname2.0
 Copy-Item .env.example .env
 notepad .env
@@ -200,7 +208,7 @@ SESSION_STORAGE=memory
 
 ## 比赛演示模式
 
-页面提供五组虚构脚本：
+页面顶部提供**年龄段选择**和**“演示脚本”**按钮，共有五组虚构脚本：
 
 1. 熬夜与队友关系；
 2. 最后一局循环；
@@ -208,7 +216,7 @@ SESSION_STORAGE=memory
 4. 父母控制与自主需要；
 5. 高风险安全路由。
 
-载入场景后会开启评审模式，但不会自动发送消息。演示者可逐句发送或修改文字。高风险脚本有单独视觉提示。
+载入场景后会开启评审模式，但不会自动发送消息；脚本中的每一句都会显示为可点击的按钮，点击后填入输入框，演示者可逐句发送或修改文字。高风险脚本有单独视觉提示。
 
 ## 后端接口
 
@@ -219,6 +227,7 @@ SESSION_STORAGE=memory
 | `GET /api/demo/scenarios` | 获取虚构演示脚本 |
 | `GET /api/evaluation/summary` | 获取评测和基线摘要 |
 | `POST /api/chat` | 进行会话 |
+| `POST /api/chat/stream` | 以前端可消费的 NDJSON 分段返回会话结果 |
 | `DELETE /api/sessions/{session_id}` | 删除匿名会话 |
 
 ## 测试与评测
@@ -242,6 +251,8 @@ python -m noname.evaluation
 ```powershell
 python -m noname.benchmark
 ```
+
+**当前离线基线（2026-11-19）**：60/60 通过（100%），高风险路由 8/8，行动计划形成 13/13；透明规则基线 100.0 vs 37.4。该结果是确定性离线兜底，不等于在线模型表现，也不代表临床疗效。
 
 在线模型评测：
 
@@ -268,6 +279,13 @@ npm run build
 5. 重置后载入“高风险安全路由”；
 6. 展示普通游戏建议停止、会话进入SAFETY；
 7. 在评审面板展示运行诊断、RAG证据、评测和基线差异。
+
+## 提交前检查
+
+- 运行 `powershell -ExecutionPolicy Bypass -File scripts/verify.ps1`，确认静态检查、118 个后端测试、60 场景、透明基线和前端构建全部通过；
+- 在线演示前运行 `python -m noname.provider_check`，并准备离线兜底（空 Key 或 `SESSION_STORAGE=memory`）；若现场首字延迟明显偏高，直接切换离线兜底，不要让评委等待。
+- **打包时排除 `.env`、`runtime/`、`node_modules/`、`dist/`、`.git/`、`__pycache__/`**，避免提交密钥、匿名会话或本地构建产物；
+- 答辩口径：60/60 与 100.0 vs 37.4 是离线工程验收，不是临床疗效或在线模型表现。
 
 ## 安全说明
 

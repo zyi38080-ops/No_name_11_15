@@ -13,7 +13,6 @@ from .schemas import (
     SessionState,
 )
 
-
 NEED_KEYWORDS: dict[str, tuple[str, ...]] = {
     "belonging": ("队友", "朋友", "开黑", "一起玩", "团队合作", "配合", "一起赢", "群里", "没人陪", "战队", "同学"),
     "achievement": ("上分", "段位", "赢", "厉害", "擅长", "成就", "排名", "翻盘"),

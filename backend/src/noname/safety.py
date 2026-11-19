@@ -17,7 +17,11 @@ class RiskRule:
 HIGH_RISK_RULES = (
     RiskRule(
         "self_harm_intent",
-        re.compile(r"(不想活|活着.{0,3}没意思|想死|去死|自杀|结束生命|伤害自己|割腕|跳楼)"),
+        re.compile(
+            r"(不想活|活着.{0,3}没意思|想死|去死|自杀|结束生命|伤害自己|割腕|跳楼|"
+            r"一了百了|结束这一切|不想醒来|走了算了|"
+            r"想消失.{0,8}(撑不下去|撑不住|算了|结束))"
+        ),
         RiskLevel.HIGH,
     ),
     RiskRule(
@@ -38,7 +42,8 @@ HIGH_RISK_RULES = (
     RiskRule(
         "violence_or_abuse",
         re.compile(
-            r"(被打|打我|揍我|殴打我|家暴|虐待|性侵|强迫我|威胁我|威胁不让|不让我出门)"
+            r"(被打|打我|揍我|殴打我|家暴|虐待|性侵|强迫我|威胁我|威胁不让|不让我出门|"
+            r"被人打|挨打|遭人打|(爸|妈|父母|家人|家里|同学|老师|他们).{0,4}打(我|了))"
         ),
         RiskLevel.HIGH,
     ),
@@ -47,7 +52,10 @@ HIGH_RISK_RULES = (
 CONCERN_RULES = (
     RiskRule(
         "severe_hopelessness",
-        re.compile(r"(什么都没意义|没有希望|没人会在乎我|我消失也没关系)"),
+        re.compile(
+            r"(什么都没意义|没有希望|没人会在乎我|我消失也没关系|"
+            r"活着.{0,3}(好|太|很)?累|撑不住|撑不下去|想消失)"
+        ),
         RiskLevel.CONCERN,
     ),
     RiskRule(
@@ -57,7 +65,7 @@ CONCERN_RULES = (
     ),
     RiskRule(
         "major_function_loss",
-        re.compile(r"(不去上学|退学|不吃饭|不出门|整天躺着|什么都做不了)"),
+        re.compile(r"(不去上学|退学|不吃饭|不出门|整天躺着|什么都做不了|不想上学)"),
         RiskLevel.CONCERN,
     ),
     RiskRule(
@@ -65,9 +73,56 @@ CONCERN_RULES = (
         re.compile(r"(校园欺凌|霸凌|被同学欺负|被孤立|被勒索)"),
         RiskLevel.CONCERN,
     ),
+    RiskRule(
+        "hostile_language",
+        re.compile(
+            r"((队友|同学|他们|别人|有人|老师|父母|我爸|我妈).{0,10}"
+            r"(说|骂|让|叫|逼|嘲笑).{0,8}(去死|死|滚)|"
+            r"(说|骂|让|叫|逼).{0,6}我.{0,6}(去死|死))"
+        ),
+        RiskLevel.CONCERN,
+    ),
 )
 
-NEGATION_WINDOW = re.compile(r"(没有|不会|并不|不是).{0,4}(想死|自杀|伤害自己)")
+# Negation is deliberately narrow: it covers "我不想死" without swallowing the
+# affirmative "我不想活了", which is a risk statement rather than a denial.
+NEGATION_WINDOW = re.compile(
+    r"(没有|不会|并不|不是|不打算|从来没|从没|没想过|不至于).{0,6}"
+    r"(想死|自杀|伤害自己|割腕|跳楼|去死|结束生命|消失)"
+    r"|不想(死|自杀|伤害自己|割腕|跳楼|去死|结束生命|消失)"
+)
+
+# Some high-risk formulations span a punctuation boundary, e.g.
+# "我想消失，撑不下去了". Clause-level scanning alone would only see two
+# CONCERN signals, so this combined pattern is applied to the whole message.
+COMBINED_HIGH_PATTERN = re.compile(
+    r"(想消失.{0,12}(撑不下去|撑不住|算了|结束)|"
+    r"(撑不下去|撑不住).{0,12}想消失)"
+)
+
+# A game-context clause such as "我在游戏里被打爆了" must not be routed to the
+# crisis flow. These markers only suppress the violence rule; self-harm language
+# inside the same clause is still scanned.
+GAME_CONTEXT_PATTERN = re.compile(
+    r"(游戏里|游戏里被|对局|局里|这局|一局|每局|排位|匹配|副本|打怪|被怪|团战|"
+    r"boss|BOSS|开黑|上分|王者荣耀|英雄联盟|和平精英|原神|第五人格|蛋仔派对)"
+)
+
+# "队友说让我去死" is hostility/bullying, not the user's own ideation. It is
+# downgraded to CONCERN unless the same clause also contains self-directed
+# high-risk language.
+THIRD_PARTY_HOSTILITY_PATTERN = re.compile(
+    r"((队友|同学|他们|别人|有人|老师|父母|我爸|我妈).{0,10}"
+    r"(说|骂|让|叫|逼|嘲笑).{0,8}(去死|死|滚)|"
+    r"(说|骂|让|叫|逼).{0,6}我.{0,6}(去死|死))"
+)
+
+SELF_DIRECTED_HIGH_PATTERN = re.compile(
+    r"(我(真的|好|很|有点|也)?想死|我(也)?不想活|活着.{0,3}没意思|自杀|伤害自己|割腕|跳楼|"
+    r"一了百了|结束这一切|不想醒来|走了算了)"
+)
+
+CLAUSE_SPLIT_PATTERN = re.compile(r"[，。！？；,.!?;\n]+")
 
 SAFETY_RESOLUTION_PATTERN = re.compile(
     r"("
@@ -90,6 +145,46 @@ SAFETY_ALONE_PATTERN = re.compile(r"(我现在)?(一个人|没人陪|独自|独�
 SAFETY_TEMP_SAFE_PATTERN = re.compile(r"(我现在|我目前|我暂时).{0,4}安全")
 
 
+def _scan_clause(clause: str) -> tuple[RiskLevel, bool, list[str]]:
+    """Scan one punctuation-delimited clause with context guards.
+
+    Splitting first keeps a game-context phrase such as "游戏里被打爆" from
+    suppressing a real disclosure in a later clause. Negation is removed before
+    matching, and third-party hostility is downgraded to CONCERN.
+    """
+
+    scan_text = NEGATION_WINDOW.sub("", clause)
+    signals: list[str] = []
+    level = RiskLevel.LOW
+    immediate_danger = False
+
+    for rule in HIGH_RISK_RULES:
+        if not rule.pattern.search(scan_text):
+            continue
+        if rule.name == "violence_or_abuse" and GAME_CONTEXT_PATTERN.search(scan_text):
+            continue
+        if (
+            rule.name == "self_harm_intent"
+            and THIRD_PARTY_HOSTILITY_PATTERN.search(scan_text)
+            and not SELF_DIRECTED_HIGH_PATTERN.search(scan_text)
+        ):
+            signals.append("hostile_language")
+            level = RiskLevel.CONCERN
+            continue
+        signals.append(rule.name)
+        level = RiskLevel.HIGH
+        immediate_danger = immediate_danger or rule.immediate_danger
+
+    if level is not RiskLevel.HIGH:
+        for rule in CONCERN_RULES:
+            if rule.pattern.search(scan_text):
+                signals.append(rule.name)
+                if level is RiskLevel.LOW:
+                    level = RiskLevel.CONCERN
+
+    return level, immediate_danger, signals
+
+
 def assess_rule_risk(text: str) -> RiskAssessment:
     """Conservative and auditable first-pass risk scan.
 
@@ -99,26 +194,30 @@ def assess_rule_risk(text: str) -> RiskAssessment:
     """
 
     normalized = " ".join(text.strip().split())
-    scan_text = NEGATION_WINDOW.sub("", normalized)
     signals: list[str] = []
     level = RiskLevel.LOW
     immediate_danger = False
 
-    for rule in HIGH_RISK_RULES:
-        if rule.pattern.search(scan_text):
-            signals.append(rule.name)
+    for clause in CLAUSE_SPLIT_PATTERN.split(normalized):
+        clause = clause.strip()
+        if not clause:
+            continue
+        clause_level, clause_immediate, clause_signals = _scan_clause(clause)
+        signals.extend(clause_signals)
+        if clause_level is RiskLevel.HIGH:
             level = RiskLevel.HIGH
-            immediate_danger = immediate_danger or rule.immediate_danger
+        elif clause_level is RiskLevel.CONCERN and level is RiskLevel.LOW:
+            level = RiskLevel.CONCERN
+        immediate_danger = immediate_danger or clause_immediate
 
-    if level is not RiskLevel.HIGH:
-        for rule in CONCERN_RULES:
-            if rule.pattern.search(scan_text):
-                signals.append(rule.name)
-                level = RiskLevel.CONCERN
+    # Catch formulations whose two halves sit in separate clauses.
+    if COMBINED_HIGH_PATTERN.search(NEGATION_WINDOW.sub("", normalized)):
+        signals.append("self_harm_intent")
+        level = RiskLevel.HIGH
 
     return RiskAssessment(
         level=level,
-        signals=signals,
+        signals=list(dict.fromkeys(signals)),
         immediate_danger=immediate_danger,
         source="rules",
     )

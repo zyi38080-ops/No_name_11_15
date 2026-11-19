@@ -8,6 +8,8 @@
 
 自动评测与冒烟测试只验证工程和预设对话表现，不代表临床疗效。
 
+> **2026-11-19 比赛冲刺复核**：`ruff check backend`、`pytest -q`（118 passed）、60 场景（60/60）、透明基线（100.0 vs 37.4）和 `npm run build` 已在本地通过。Docker 与 GitHub Actions 需在答辩环境/仓库设置中复核；本机未安装 Docker。
+
 ## 1. 本地可运行性
 
 - [x] Conda Python 3.11环境可以安装根目录`requirements-dev.txt`；

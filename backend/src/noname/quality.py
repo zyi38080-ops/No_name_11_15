@@ -4,7 +4,6 @@ import re
 
 from .schemas import ConversationAnalysis, RiskLevel
 
-
 FORBIDDEN_PATTERNS: dict[str, re.Pattern[str]] = {
     "diagnosis_or_label": re.compile(r"(你(已经|就是|属于).{0,5}(成瘾|游戏障碍|抑郁症)|网瘾少年)"),
     "coercive_language": re.compile(r"(你必须|你应该立刻戒掉|每天只能玩|必须听父母)"),
